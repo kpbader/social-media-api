@@ -71,7 +71,6 @@ const thoughtController = {
             .catch(err => res.json(err));
     },
 
-    // post to create a reaction stored in a single thought's reactions array field  
     createReaction({ params, body }, res) {
         Thought.findOneAndUpdate({ _id: params.thoughtId }, { $push: { reactions: body } }, { new: true, runValidators: true })
             .then(dbThoughtData => {
@@ -86,9 +85,9 @@ const thoughtController = {
 
     // delete to pull and remove a reaction by the reaction's reactionId value 
     deleteReaction({ params }, res) {
-        Thought.findOneAndDelete(
-            { _id: params.reactionId },
-            { $pull: { reactions: { reactionId: params.reactionId } } },
+        Thought.findOneAndUpdate(
+            { _id: params.thoughtId },
+            { $pull: { reactions: { _id: params.reactionId } } },
             { new: true }
         )
             .then(dbThoughtData => res.json(dbThoughtData))
